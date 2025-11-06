@@ -2,10 +2,10 @@ import pandas as pd
 import numpy as np
 from sqlalchemy import *
 import holidays
+
 # Ask for DB credentials
 USERNAME = input("Enter your MySQL username: ")
 PASSWORD = input("Enter your MySQL password: ")
-
 
 df_fl = pd.read_csv("flights.csv", low_memory=False)
 df_al = pd.read_csv("airlines.csv")
@@ -32,6 +32,7 @@ df_fl = df_fl.drop(["DIVERTED",
             "SCHEDULED_TIME"
            ],
            axis=1)
+
 #Filter only positive delay values
 df_fl["DEPARTURE_DELAY"] = df_fl["DEPARTURE_DELAY"].fillna(0)
 #df_fl["DEPARTURE_DELAY"] = df_fl["DEPARTURE_DELAY"].clip(lower=0).astype(int)
@@ -71,14 +72,11 @@ us_holidays = holidays.US(years=range(min_year, max_year + 1))
 
 df_fl['is_holiday'] = pd.to_datetime(df_fl['FLIGHT_DATE']).dt.date.isin(us_holidays)
 
-
 # Match airline code/airline name with their names
 mapping = dict(zip(df_al["IATA_CODE"], df_al["AIRLINE"]))
 df_fl["AIRLINE_NAME"] = df_fl["AIRLINE"].map(mapping)
 
-
 df_ap=df_ap.drop(['COUNTRY','LATITUDE','LONGITUDE'],axis=1)
-
 
 def format_hhmm(col):
     # Convert to string, pad with zeros, and coerce invalids to NaT
@@ -89,7 +87,6 @@ def format_hhmm(col):
     return pd.to_datetime(s, format="%H%M", errors="coerce").dt.strftime("%H:%M")
 df_fl["DEPARTURE_TIME"] = format_hhmm(df_fl["DEPARTURE_TIME"])
 df_fl["SCHEDULED_DEPARTURE"] = format_hhmm(df_fl["SCHEDULED_DEPARTURE"])
-
 
 # Create time dataframe for "time" dimensional table
 def get_period_of_day(hour):
@@ -131,7 +128,6 @@ df_fl = df_fl.rename(columns={
     'DEPARTURE_TIME': 'departure_time',
     'DEPARTURE_DELAY': 'departure_delay'
 })
-
 
 df_flight_info = df_fl[['flight_id', 'airline_code', 'airline_name', 'flight_number', 'tail_number']]
 df_flight_info = df_flight_info.drop_duplicates()
@@ -233,6 +229,3 @@ df_fl[['flight_id', 'date_id', 'scheduled_departure', 'departure_time', 'origin_
         'departure_delay': Integer()
     }
 )
-
-
-

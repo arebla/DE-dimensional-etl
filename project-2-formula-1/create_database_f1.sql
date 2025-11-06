@@ -1,114 +1,116 @@
+CREATE DATABASE project2_f1;
+USE project2_f1;
 
-create database project2_f1;
-use project2_f1;
 
-create table dim_driver(
--- driver_id int  primary key,
-driver_id varchar(20) primary key,
-`name` varchar(20),
-surname varchar(30),
-nationality varchar(20),
-date_of_birth date
+CREATE TABLE dim_driver (
+    driver_id VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(20),
+    surname VARCHAR(30),
+    nationality VARCHAR(20),
+    date_of_birth DATE
 );
 
-create table dim_constructor(
--- constructor_id int primary key,
-constructor_id varchar(25) primary key ,
-`name` varchar(25),
-nationality varchar(20)
+CREATE TABLE dim_constructor (
+    constructor_id VARCHAR(25) PRIMARY KEY,
+    name VARCHAR(25),
+    nationality VARCHAR(20)
 );
 
-create table dim_circuit(
--- circuit_id int primary key,
-circuit_id varchar(20) primary key,
-`name` varchar(40),
-location varchar(25),
-country varchar(15),
-latitude decimal(10,7),
-longitude decimal(10,7), 
-altitude int
+CREATE TABLE dim_circuit (
+    circuit_id VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(40),
+    location VARCHAR(25),
+    country VARCHAR(15),
+    latitude DECIMAL(10,7),
+    longitude DECIMAL(10,7),
+    altitude INT
 );
 
-create table dim_race(
-race_id varchar(10) primary key,
-`date` date,
-round int
+CREATE TABLE dim_race (
+    race_id VARCHAR(10) PRIMARY KEY,
+    race_date DATE,
+    round INT
 );
 
-create table fact_qualy(
-qualy_id int auto_increment primary key,
-driver_id varchar(20),
-constructor_id  varchar(25),
-circuit_id varchar(20),
-race_id varchar(10),
-q1 int,
-q2 int,
-q3 int,
-	CONSTRAINT fk_qualy_driver
+CREATE TABLE fact_qualy (
+    qualy_id INT AUTO_INCREMENT PRIMARY KEY,
+    driver_id VARCHAR(20),
+    constructor_id VARCHAR(25),
+    circuit_id VARCHAR(20),
+    race_id VARCHAR(10),
+    q1 INT,
+    q2 INT,
+    q3 INT,
+
+    CONSTRAINT fk_qualy_driver
         FOREIGN KEY (driver_id)
-        REFERENCES dim_driver(driver_id),
+        REFERENCES dim_driver (driver_id),
 
-	CONSTRAINT fk_qualy_constructor
+    CONSTRAINT fk_qualy_constructor
         FOREIGN KEY (constructor_id)
-        REFERENCES dim_constructor(constructor_id),
-        
-	CONSTRAINT fk_qualy_circuit
+        REFERENCES dim_constructor (constructor_id),
+
+    CONSTRAINT fk_qualy_circuit
         FOREIGN KEY (circuit_id)
-        REFERENCES dim_circuit(circuit_id),
-        
-	CONSTRAINT fk_qualy_race
+        REFERENCES dim_circuit (circuit_id),
+
+    CONSTRAINT fk_qualy_race
         FOREIGN KEY (race_id)
-        REFERENCES dim_race(race_id)
+        REFERENCES dim_race (race_id)
 );
 
-create table fact_pit(
-pit_id int auto_increment primary key,
-race_id varchar(10),
-driver_id varchar(20),
-constructor_id  varchar(25),
-circuit_id varchar(20),
-stop_number int,
-lap_number int,
-pit_time int,
-	CONSTRAINT fk_pit_driver
+CREATE TABLE fact_pit (
+    pit_id INT AUTO_INCREMENT PRIMARY KEY,
+    race_id VARCHAR(10),
+    driver_id VARCHAR(20),
+    constructor_id VARCHAR(25),
+    circuit_id VARCHAR(20),
+    stop_number INT,
+    lap_number INT,
+    pit_time INT,
+
+    CONSTRAINT fk_pit_driver
         FOREIGN KEY (driver_id)
-        REFERENCES dim_driver(driver_id),
+        REFERENCES dim_driver (driver_id),
 
-	CONSTRAINT fk_pit_constructor
+    CONSTRAINT fk_pit_constructor
         FOREIGN KEY (constructor_id)
-        REFERENCES dim_constructor(constructor_id),
-        
-	CONSTRAINT fk_pit_circuit
-        FOREIGN KEY (circuit_id)
-        REFERENCES dim_circuit(circuit_id),
-        
-	CONSTRAINT fk_pit_race
-        FOREIGN KEY (race_id)
-        REFERENCES dim_race(race_id)
-);
-create table fact_results(
-result_id int auto_increment primary key,
-race_id varchar(10),
-driver_id varchar(20),
-constructor_id  varchar(25),
-circuit_id varchar(20),
-start_pos int,
-finish_pos int,
-points int,
-	CONSTRAINT fk_results_driver
-	FOREIGN KEY (driver_id)
-	REFERENCES dim_driver(driver_id),
+        REFERENCES dim_constructor (constructor_id),
 
-	CONSTRAINT fk_results_constructor
-        FOREIGN KEY (constructor_id)
-        REFERENCES dim_constructor(constructor_id),
-        
-	CONSTRAINT fk_results_circuit
+    CONSTRAINT fk_pit_circuit
         FOREIGN KEY (circuit_id)
-        REFERENCES dim_circuit(circuit_id),
-        
-	CONSTRAINT fk_results_race
+        REFERENCES dim_circuit (circuit_id),
+
+    CONSTRAINT fk_pit_race
         FOREIGN KEY (race_id)
-        REFERENCES dim_race(race_id)
+        REFERENCES dim_race (race_id)
 );
--- drop database project2_f1;
+
+CREATE TABLE fact_results (
+    result_id INT AUTO_INCREMENT PRIMARY KEY,
+    race_id VARCHAR(10),
+    driver_id VARCHAR(20),
+    constructor_id VARCHAR(25),
+    circuit_id VARCHAR(20),
+    start_pos INT,
+    finish_pos INT,
+    points INT,
+
+    CONSTRAINT fk_results_driver
+        FOREIGN KEY (driver_id)
+        REFERENCES dim_driver (driver_id),
+
+    CONSTRAINT fk_results_constructor
+        FOREIGN KEY (constructor_id)
+        REFERENCES dim_constructor (constructor_id),
+
+    CONSTRAINT fk_results_circuit
+        FOREIGN KEY (circuit_id)
+        REFERENCES dim_circuit (circuit_id),
+
+    CONSTRAINT fk_results_race
+        FOREIGN KEY (race_id)
+        REFERENCES dim_race (race_id)
+);
+
+-- DROP DATABASE project2_f1;

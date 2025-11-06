@@ -4,26 +4,26 @@ SELECT
     COUNT(*) AS count_of_delayed_flights
 FROM
     fact_delay as t1
-inner join 
+inner join
 	dim_flight_info as t2
-on t1.flight_id = t2.flight_id	
+on t1.flight_id = t2.flight_id
 GROUP BY
     t2.airline_code
 ORDER BY
     count_of_delayed_flights DESC;
-    
+
 -- Which origin airpports has the most delayed flights?
 SELECT
-    origin_airport_id,  
+    origin_airport_id,
     COUNT(*) AS count_of_delayed_flights
 FROM
     fact_delay
 GROUP BY
-    origin_airport_id 
+    origin_airport_id
 ORDER BY
     count_of_delayed_flights DESC;
 
--- How do holidays affect the delay?    
+-- How do holidays affect the delay?
 SELECT
     MONTHNAME(t2.full_date) AS month_name,
     DAYNAME(t2.full_date) AS day_of_week,
@@ -44,7 +44,7 @@ ORDER BY
 
 -- Which hours have the most delays?
 SELECT
-    T.hour_of_day, 
+    T.hour_of_day,
     T.period_of_day,
     COUNT(FD.delay_id) AS total_dealayed_flights
 FROM
